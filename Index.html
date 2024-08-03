@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encuesta</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2 {
+            text-align: center;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label, select, button {
+            margin: 10px 0;
+        }
+
+        .results-container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .result-section {
+            flex: 1;
+            margin: 0 10px;
+        }
+
+        .result-section h3 {
+            text-align: center;
+        }
+
+        .result-section p {
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Encuesta</h1>
+        <form id="survey-form">
+            <label for="q1">¿Cuál es tu color favorito?</label>
+            <select id="q1" name="q1">
+                <option value="rojo">Rojo</option>
+                <option value="azul">Azul</option>
+                <option value="verde">Verde</option>
+                <option value="amarillo">Amarillo</option>
+            </select>
+
+            <label for="q2">¿Cuál es tu comida favorita?</label>
+            <select id="q2" name="q2">
+                <option value="pizza">Pizza</option>
+                <option value="hamburguesa">Hamburguesa</option>
+                <option value="ensalada">Ensalada</option>
+                <option value="pasta">Pasta</option>
+            </select>
+
+            <label for="q3">¿Cuál es tu deporte favorito?</label>
+            <select id="q3" name="q3">
+                <option value="futbol">Fútbol</option>
+                <option value="baloncesto">Baloncesto</option>
+                <option value="tenis">Tenis</option>
+                <option value="natacion">Natación</option>
+            </select>
+
+            <button type="button" onclick="submitSurvey()">Enviar</button>
+        </form>
+        <button type="button" onclick="promptPassword()">Ver Resultados</button>
+        <div id="results" style="display:none;">
+            <h2>Resultados de la Encuesta</h2>
+            <div class="results-container">
+                <div id="result-q1" class="result-section"></div>
+                <div id="result-q2" class="result-section"></div>
+                <div id="result-q3" class="result-section"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const surveyData = {
+            q1: { rojo: 0, azul: 0, verde: 0, amarillo: 0 },
+            q2: { pizza: 0, hamburguesa: 0, ensalada: 0, pasta: 0 },
+            q3: { futbol: 0, baloncesto: 0, tenis: 0, natacion: 0 }
+        };
+
+        let totalResponses = 0;
+        const password = "1234";  // Define la contraseña aquí
+
+        function submitSurvey() {
+            const q1 = document.getElementById('q1').value;
+            const q2 = document.getElementById('q2').value;
+            const q3 = document.getElementById('q3').value;
+
+            surveyData.q1[q1]++;
+            surveyData.q2[q2]++;
+            surveyData.q3[q3]++;
+            totalResponses++;
+
+            alert("Encuesta enviada");
+        }
+
+        function calculatePercentage(count) {
+            return ((count / totalResponses) * 100).toFixed(2);
+        }
+
+        function promptPassword() {
+            const userPassword = prompt("Por favor, introduce la contraseña para ver los resultados:");
+            if (userPassword === password) {
+                showResults();
+            } else {
+                alert("Contraseña incorrecta. Inténtalo de nuevo.");
+            }
+        }
+
+        function showResults() {
+            if (totalResponses === 0) {
+                alert("No hay respuestas para mostrar.");
+                return;
+            }
+
+            document.getElementById('results').style.display = 'block';
+
+            const resultQ1 = document.getElementById('result-q1');
+            const resultQ2 = document.getElementById('result-q2');
+            const resultQ3 = document.getElementById('result-q3');
+
+            resultQ1.innerHTML = `<h3>¿Cuál es tu color favorito?</h3>
+                <p>Rojo: ${calculatePercentage(surveyData.q1.rojo)}%</p>
+                <p>Azul: ${calculatePercentage(surveyData.q1.azul)}%</p>
+                <p>Verde: ${calculatePercentage(surveyData.q1.verde)}%</p>
+                <p>Amarillo: ${calculatePercentage(surveyData.q1.amarillo)}%</p>`;
+
+            resultQ2.innerHTML = `<h3>¿Cuál es tu comida favorita?</h3>
+                <p>Pizza: ${calculatePercentage(surveyData.q2.pizza)}%</p>
+                <p>Hamburguesa: ${calculatePercentage(surveyData.q2.hamburguesa)}%</p>
+                <p>Ensalada: ${calculatePercentage(surveyData.q2.ensalada)}%</p>
+                <p>Pasta: ${calculatePercentage(surveyData.q2.pasta)}%</p>`;
+
+            resultQ3.innerHTML = `<h3>¿Cuál es tu deporte favorito?</h3>
+                <p>Fútbol: ${calculatePercentage(surveyData.q3.futbol)}%</p>
+                <p>Baloncesto: ${calculatePercentage(surveyData.q3.baloncesto)}%</p>
+                <p>Tenis: ${calculatePercentage(surveyData.q3.tenis)}%</p>
+                <p>Natación: ${calculatePercentage(surveyData.q3.natacion)}%</p>`;
+        }
+    </script>
+</body>
+</html>
+
